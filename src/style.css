@@ -1,0 +1,125 @@
+.pokemonDiv {
+    display: flex;
+    flex-direction: row; /* direzione standard, può essere cambiata in 'column' per un layout verticale */
+    justify-content: space-between; /* distribuisce lo spazio uniformemente tra gli elementi */
+    align-items: center; /* centra gli elementi lungo l'asse trasversale */
+    flex-wrap: wrap; /* permette agli elementi di andare a capo se non c'è abbastanza spazio */
+    gap: 40px; /* spazio tra gli elementi */
+    padding: 100px;
+}
+
+.pokemonContainer {
+    perspective: 1000px;
+    position: relative;
+    flex-direction: column;
+}
+
+body{
+    background-color: rgb(8, 9, 26);
+    /*background-color: rgb(20, 167, 27);*/
+}
+
+.pokemonName{
+    color: rgb(240, 255, 144);
+    font-size: large;
+    font-size: 20px;
+}
+
+.pokemonImage{
+    width: 200px;
+    height: 200px;
+}
+
+.pokeNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: rgb(218, 209, 91);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    perspective: 1000px;
+}
+
+.pokemonContainer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10%;
+    transform: rotateY(180deg); /* Ruota il background quando l'elemento è ruotato */
+    transform-origin: center; /* Centra la trasformazione di origine */
+    transition: transform 0.5s; /* Applicare la stessa transizione al background */
+}
+
+
+
+.card-inner {
+    width: 180px;
+    height: 250px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    transform: rotateY(0deg);
+}
+
+.pokemonContainer:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    border: solid;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(240, 255, 144); /* Colore del testo */
+    background-color: rgb(10, 74, 127); /* Colore dello sfondo */
+    border-radius: 10%;
+}
+
+.back {
+    transform: rotateY(180deg);
+}
+
+.abilityContainer{
+    text-align: left;
+}
+
+.catchButton{
+    width: 80px;
+    height: 25px;
+    background-color: rgb(240, 255, 144);
+    border: none;
+    border-radius: 40%;
+    color: rgb(10, 74, 127);
+    font-size: large;
+}
+
+.imageLogo{
+    width: 200%;
+    height: 600%;
+}
+
+.elementNav{
+    color: rgb(10, 74, 127);;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
