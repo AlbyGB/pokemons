@@ -6,18 +6,19 @@ let pokeball = 100;
 
 
 const displayPokemon = async () => {
-
     /* DA IMPLEMENTARE*/
     checkAlreadyOwnedPokemon();
 
 
-    const div = document.getElementById("pokemon")
+    const div = document.getElementById("pokemon");
+
     while (div.firstChild) { // pullisce lo schermo per updatare i pokemon
         div.removeChild(div.firstChild);
     }
 
     document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
     setInterval(candiesUpdater, 1000);
+
     document.getElementById("pokeball").textContent = pokeball;
     setInterval(pokeballUpdater, 10000);
 
@@ -35,13 +36,15 @@ const displayPokemon = async () => {
 
     
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
-        while(pokemon[i] == null){ // evita che i pokemon su myPokemon vengano mostrati
+        while (pokemon[i] == null) { // evita che i pokemon su myPokemon vengano mostrati
             i++;
         }
+
         for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
             if (pokemonChain[j].chain.species.name === pokemon[i].name) {
                 const pokemonDiv = document.createElement("div"); // card
                 const pokemonContent = document.createElement('div'); // contenuto card
+
                 pokemonDiv.className = "pokemonContainer";
                 pokemonContent.className = "card-inner";
 
@@ -52,6 +55,7 @@ const displayPokemon = async () => {
                 pokemonCardBack.className = "back";
 
                 let pokemonName = document.createElement("h5"); // nome pokemon
+
                 pokemonName.className = "pokemonName";
                 pokemonName.textContent = capitalizeFirstLetter(pokemon[i].name) + "  #" + (i + 1);
                 pokemonCardFront.appendChild(pokemonName);
@@ -90,11 +94,13 @@ const displayPokemon = async () => {
                         abilityContainer.className = "abilityContainer";
 
                         abilityContainer.appendChild(document.createElement("hr"));
+
                         data.abilities.forEach(element => {
                             const pokemonBackcardText = document.createElement("h3");
                             pokemonBackcardText.textContent = capitalizeFirstLetter(element.ability.name);
                             abilityContainer.appendChild(pokemonBackcardText);
                         });
+
                         abilityContainer.appendChild(document.createElement("hr"));
                         pokemonCardBack.appendChild(abilityContainer);
 
@@ -105,6 +111,7 @@ const displayPokemon = async () => {
                         catchButton.addEventListener("click", function () { //funzione al catch
                             const random = Math.random();
                             pokeball -= 1;
+
                             if (random >= 0.5) { // condizioni di cattura
                                 console.log("preso");
                                 myPokemon.push(pokemon[i]);
@@ -115,6 +122,7 @@ const displayPokemon = async () => {
                                 document.getElementById("pokeball").textContent = pokeball;
                             }
                         });
+
                         pokemonCardBack.appendChild(catchButton);
                     })
                     .catch(error => {
