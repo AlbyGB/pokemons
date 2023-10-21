@@ -22,12 +22,12 @@ const displayPokemon = async () => {
     setInterval(pokeballUpdater, 10000)
 
     for (let i = 0; i < 522; i++) {                                 // prende tutte le evolution chains
-        if (i != 209 && i != 221 && i != 224 && i != 226 && i != 230 && i != 237 && i != 250 && i != 225) {
+        if (i !== 209 && i !== 221 && i !== 224 && i !== 226 && i !== 230 && i !== 237 && i !== 250 && i !== 225) {
             const data = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${i + 1}/`)
             const pokeJson = await data.json()
             //console.log(pokeJson)
             //console.log(i)
-            if (data.status == 200) {
+            if (data.status === 200) {
                 pokemonChain.push(pokeJson);
             }
         }
@@ -145,7 +145,7 @@ fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.')               
 
         pokemon = Array.from(myJson.results)
 
-        displayPokemon()
+        await displayPokemon()
     })
     .catch(error => {
         console.error(error);
@@ -162,11 +162,11 @@ function checkAlreadyOwnedPokemon(){                                            
     */
 }
 
-candiesUpdater = ()=>{                                                                      //aggiornamento temporizzato di caramelle e pokeball
+const candiesUpdater = ()=>{                                                                      //aggiornamento temporizzato di caramelle e pokeball
     candies += 1
     document.getElementById("candies").textContent = candies
 }
-pokeballUpdater = ()=>{
+const pokeballUpdater = ()=>{
     pokeball += 1
     document.getElementById("pokeball").textContent = pokeball
 }
