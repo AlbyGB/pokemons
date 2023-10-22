@@ -34,6 +34,8 @@ const displayPokemon = async () => {
         }
     }
 
+
+    // TODO implementare forEach
     
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
         if (pokemon[i] === null) continue;
@@ -141,6 +143,8 @@ const displayPokemon = async () => {
 
 }
 
+
+// TODO fetch in variabili
 fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.') // recupera tutti i pokemon
     .then(async response => {
         if (!response.ok) {
