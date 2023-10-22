@@ -36,9 +36,7 @@ const displayPokemon = async () => {
 
     
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
-        while (pokemon[i] == null) { // evita che i pokemon su myPokemon vengano mostrati
-            i++;
-        }
+        if (pokemon[i] === null) continue;
 
         for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
             if (pokemonChain[j].chain.species.name === pokemon[i].name) {
@@ -57,7 +55,7 @@ const displayPokemon = async () => {
                 let pokemonName = document.createElement("h5"); // nome pokemon
 
                 pokemonName.className = "pokemonName";
-                pokemonName.textContent = capitalizeFirstLetter(pokemon[i].name) + "  #" + (i + 1);
+                pokemonName.textContent = pokemon[i].name + "  #" + (i + 1);
                 pokemonCardFront.appendChild(pokemonName);
 
                 fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`) // recupera l'immagine
@@ -97,7 +95,7 @@ const displayPokemon = async () => {
 
                         data.abilities.forEach(element => {
                             const pokemonBackcardText = document.createElement("h3");
-                            pokemonBackcardText.textContent = capitalizeFirstLetter(element.ability.name);
+                            pokemonBackcardText.textContent = element.ability.name;
                             abilityContainer.appendChild(pokemonBackcardText);
                         });
 
@@ -158,10 +156,6 @@ fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.') // recupera tu
     .catch(error => {
         console.error(error);
     });
-
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 function checkAlreadyOwnedPokemon() { // da implementare quando ci sarà il salvataggio
     /*
