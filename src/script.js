@@ -1,4 +1,4 @@
-let pokemon = [];
+let pokemons = [];
 let pokemonChain = [];
 let myPokemon = [];
 
@@ -7,6 +7,17 @@ let candies = 100;
 let pokeball = 100;
 let pokemonOwnedIndex = [];
 
+
+export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
+    candies += 1;
+    document.getElementById("candies").textContent = candies;
+    localStorage.setItem("candies", candies);
+}
+export const pokeballUpdater = () => {
+    pokeball += 1;
+    document.getElementById("pokeball").textContent = pokeball;
+    localStorage.setItem("pokeball", pokeball);
+}
 
 
 const displayPokemon = async () => {
@@ -32,10 +43,10 @@ const displayPokemon = async () => {
 
     // TODO implementare forEach
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
-        if (pokemon[i] === null) continue;
+        if (pokemons[i] === null) continue;
 
         for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
-            if (pokemonChain[j].chain.species.name === pokemon[i].name) {
+            if (pokemonChain[j].chain.species.name === pokemons[i].name) {
                 const pokemonDiv = document.createElement("div"); // card
                 const pokemonContent = document.createElement('div'); // contenuto card
 
@@ -51,82 +62,72 @@ const displayPokemon = async () => {
                 let pokemonName = document.createElement("h5"); // nome pokemon
 
                 pokemonName.className = "pokemonName";
-                pokemonName.textContent = pokemon[i].name + "  #" + (i + 1);
+                pokemonName.textContent = pokemons[i].name + "  #" + (i + 1);
                 pokemonCardFront.appendChild(pokemonName);
 
-                fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`) // recupera l'immagine
-                    .then(async response => {
-                        if (!response.ok) {
-                            throw new Error('Errore nella richiesta HTTP');
-                        }
+                // recupera l'immagine
+                const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`);
+                if (imageResponse.status !== 200) {
+                    throw new Error('Errore nella richiesta HTTP');
+                }
 
-                        const bleb = await response.blob();
+                const bleb = await imageResponse.blob();
 
-                        const image = document.createElement("img"); // immagine
-                        image.className = "pokemonImage";
-                        image.src = URL.createObjectURL(bleb);
-                        pokemonCardFront.appendChild(image);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                const image = document.createElement("img"); // immagine
+                image.className = "pokemonImage";
+                image.src = URL.createObjectURL(bleb);
+                pokemonCardFront.appendChild(image);
 
                 const imgPokemon = document.createElement("img"); // logo pokemon sul retro della card
                 imgPokemon.src = "https://assets.pokemon.com/assets/cms2-it-it/img/misc/gus/buttons/logo-pokemon-79x45.png";
                 pokemonCardBack.appendChild(imgPokemon);
 
+                // recupero informazioni aggiuntive per il pokemon
+                const pokemonInformationsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}/`);
 
-                fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}/`) // recupero informazioni aggiuntive per il pokemon
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Errore nella richiesta API');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const abilityContainer = document.createElement("div"); // div abilità pokemon
-                        abilityContainer.className = "abilityContainer";
+                if (pokemonInformationsResponse.status !== 200) {
+                    throw new Error('Errore nella richiesta API');
+                }
 
-                        abilityContainer.appendChild(document.createElement("hr"));
+                const pokemonInformationJSON = await pokemonInformationsResponse.json();
 
-                        data.abilities.forEach(element => {
-                            const pokemonBackcardText = document.createElement("h3");
-                            pokemonBackcardText.textContent = element.ability.name;
-                            abilityContainer.appendChild(pokemonBackcardText);
-                        });
+                const abilityContainer = document.createElement("div"); // div abilità pokemon
+                abilityContainer.className = "abilityContainer";
 
-                        abilityContainer.appendChild(document.createElement("hr"));
-                        pokemonCardBack.appendChild(abilityContainer);
+                abilityContainer.appendChild(document.createElement("hr"));
 
-                        const catchButton = document.createElement("button"); // bottone catch
-                        catchButton.className = "catchButton";
-                        catchButton.innerHTML = "Catch";
+                pokemonInformationJSON.abilities.forEach(element => {
+                    const pokemonBackcardText = document.createElement("h3");
+                    pokemonBackcardText.textContent = element.ability.name;
+                    abilityContainer.appendChild(pokemonBackcardText);
+                });
 
-                        catchButton.addEventListener("click", function () { //funzione al catch
-                            const random = Math.random();
-                            pokeball -= 1;
+                abilityContainer.appendChild(document.createElement("hr"));
+                pokemonCardBack.appendChild(abilityContainer);
 
-                            if (random >= 0.5) { // condizioni di cattura
-                                console.log("preso");
-                                myPokemon.push(pokemon[i]);
-                                pokemon[i] = null;
-                                pokemonOwnedIndex.push(i);
-                                displayPokemon();
-                            } else {
-                                console.log("oh no è scappato");
-                                document.getElementById("pokeball").textContent = pokeball;
-                            }
+                const catchButton = document.createElement("button"); // bottone catch
+                catchButton.className = "catchButton";
+                catchButton.innerHTML = "Catch";
 
-                            localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
-                        });
+                catchButton.addEventListener("click", function () { //funzione al catch
+                    const random = Math.random();
+                    pokeball -= 1;
 
-                        pokemonCardBack.appendChild(catchButton);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                    if (random >= 0.5) { // condizioni di cattura
+                        console.log("preso");
+                        myPokemon.push(pokemons[i]);
+                        pokemons[i] = null;
+                        pokemonOwnedIndex.push(i);
+                        displayPokemon();
+                    } else {
+                        console.log("oh no è scappato");
+                        document.getElementById("pokeball").textContent = pokeball;
+                    }
 
+                    localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
+                });
 
+                pokemonCardBack.appendChild(catchButton);
                 pokemonContent.appendChild(pokemonCardFront);
                 pokemonContent.appendChild(pokemonCardBack);
                 pokemonDiv.appendChild(pokemonContent);
@@ -135,79 +136,65 @@ const displayPokemon = async () => {
                 j = pokemonChain.length; // stoppa il for
             }
         }
-
     }
-
 }
 
+const getAllPokemons = async () => {
+    // recupera tutti i pokemon
+    const allPokemons = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.');
 
-// TODO fetch in variabili
-fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.') // recupera tutti i pokemon
-    .then(async response => {
-        if (!response.ok) {
-            throw new Error('Errore nella richiesta HTTP');
-        }
-        if (localStorage.getItem("pokemonIndex") !== null) {
-            let string = localStorage.getItem("pokemonIndex");
-            pokemonOwnedIndex = string.split(",");
-            console.log(pokemonOwnedIndex)
-        } else {
-            localStorage.setItem("pokemonIndex", pokemonOwnedIndex)
-        }
+    if (allPokemons.status !== 200) {
+        throw new Error('Errore nella richiesta HTTP');
+    }
 
-        candies = parseInt(localStorage.getItem("candies"));
-        pokeball = parseInt(localStorage.getItem("pokeball"));
-        const myJson = await response.json();
+    if (localStorage.getItem("pokemonIndex") !== null) {
+        let string = localStorage.getItem("pokemonIndex");
+        pokemonOwnedIndex = string.split(",");
+        console.log(pokemonOwnedIndex)
+    } else {
+        localStorage.setItem("pokemonIndex", pokemonOwnedIndex)
+    }
 
-        pokemon = Array.from(myJson.results);
+    candies = parseInt(localStorage.getItem("candies"));
+    pokeball = parseInt(localStorage.getItem("pokeball"));
+    const myJson = await allPokemons.json();
 
-        document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
-        setInterval(candiesUpdater, 1000);
+    pokemons = Array.from(myJson.results);
 
-        document.getElementById("pokeball").textContent = pokeball;
-        setInterval(pokeballUpdater, 10000);
+    document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
+    setInterval(candiesUpdater, 1000);
 
-        pokemon.forEach((pokemon, idx) => {
-            localStorage.setItem(idx, JSON.stringify(pokemon));
-        });
+    document.getElementById("pokeball").textContent = pokeball;
+    setInterval(pokeballUpdater, 10000);
 
-        if (localStorage.getItem("0") !== null) {
-            for (let i = 0; i < 1272; i++) {
-                console.log(localStorage.getItem(i));
-            }
-        } else {
-            localStorage.setItem("pokemon", pokemon)
-        }
-
-        await checkAlreadyOwnedPokemon()
-        await displayPokemon();
-
-    })
-    .catch(error => {
-        console.error(error);
+    pokemons.forEach((pokemon, idx) => {
+        localStorage.setItem(idx, JSON.stringify(pokemon));
     });
 
-function checkAlreadyOwnedPokemon() {
+    if (localStorage.getItem("0") !== null) {
+        /*for (let i = 0; i < 1272; i++) {
+            console.log(localStorage.getItem(i));
+        }*/
+    } else {
+        localStorage.setItem("pokemon", pokemons)
+    }
+
+    await checkAlreadyOwnedPokemon()
+    await displayPokemon();
+}
+
+const checkAlreadyOwnedPokemon = () => {
     // console.log(pokemonOwnedIndex)
-    for (let i = 0; i < pokemon.length; i++) {
+    for (let i = 0; i < pokemons.length; i++) {
         for (let j = 0; j < pokemonOwnedIndex.length; j++) {
 
             if (i === pokemonOwnedIndex[j]) {
                 myPokemon.push(pokeball[i]);
-                pokemon[i] = null;
+                pokemons[i] = null;
 
             }
         }
     }
 }
 
-export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
-    candies += 1;
-    document.getElementById("candies").textContent = candies;
-    localStorage.setItem("candies", candies);
-}
-export const pokeballUpdater = () => {
-    pokeball += 1;
-    document.getElementById("pokeball").textContent = pokeball;
-    localStorage.setItem("pokeball", pokeball);
-}
+getAllPokemons();
