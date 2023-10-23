@@ -199,6 +199,7 @@ function checkAlreadyOwnedPokemon() {
             }
         }
     }
+}
 
 export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
     candies += 1;
