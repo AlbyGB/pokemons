@@ -1,26 +1,21 @@
 let pokemon = [];
 let pokemonChain = [];
 let myPokemon = [];
+
+
 let candies = 100;
 let pokeball = 100;
+let pokemonOwnedIndex = [];
+
 
 
 const displayPokemon = async () => {
     /* DA IMPLEMENTARE*/
-    checkAlreadyOwnedPokemon();
-
-
     const div = document.getElementById("pokemon");
 
     while (div.firstChild) { // pullisce lo schermo per updatare i pokemon
         div.removeChild(div.firstChild);
     }
-
-    document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
-    setInterval(candiesUpdater, 1000);
-
-    document.getElementById("pokeball").textContent = pokeball;
-    setInterval(pokeballUpdater, 10000);
 
     for (let i = 0; i < 522; i++) { // prende tutte le evolution chains
         if (i !== 209 && i !== 221 && i !== 224 && i !== 226 && i !== 230 && i !== 237 && i !== 250 && i !== 225) {
@@ -34,11 +29,11 @@ const displayPokemon = async () => {
         }
     }
 
-    
+
+    // TODO implementare forEach
+
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
-        while (pokemon[i] == null) { // evita che i pokemon su myPokemon vengano mostrati
-            i++;
-        }
+        if (pokemon[i] === null) continue;
 
         for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
             if (pokemonChain[j].chain.species.name === pokemon[i].name) {
@@ -57,7 +52,7 @@ const displayPokemon = async () => {
                 let pokemonName = document.createElement("h5"); // nome pokemon
 
                 pokemonName.className = "pokemonName";
-                pokemonName.textContent = capitalizeFirstLetter(pokemon[i].name) + "  #" + (i + 1);
+                pokemonName.textContent = pokemon[i].name + "  #" + (i + 1);
                 pokemonCardFront.appendChild(pokemonName);
 
                 fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`) // recupera l'immagine
@@ -97,7 +92,7 @@ const displayPokemon = async () => {
 
                         data.abilities.forEach(element => {
                             const pokemonBackcardText = document.createElement("h3");
-                            pokemonBackcardText.textContent = capitalizeFirstLetter(element.ability.name);
+                            pokemonBackcardText.textContent = element.ability.name;
                             abilityContainer.appendChild(pokemonBackcardText);
                         });
 
@@ -116,11 +111,14 @@ const displayPokemon = async () => {
                                 console.log("preso");
                                 myPokemon.push(pokemon[i]);
                                 pokemon[i] = null;
+                                pokemonOwnedIndex.push(i);
                                 displayPokemon();
                             } else {
                                 console.log("oh no è scappato");
                                 document.getElementById("pokeball").textContent = pokeball;
                             }
+
+                            localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
                         });
 
                         pokemonCardBack.appendChild(catchButton);
@@ -143,38 +141,74 @@ const displayPokemon = async () => {
 
 }
 
+
+// TODO fetch in variabili
 fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0.') // recupera tutti i pokemon
     .then(async response => {
         if (!response.ok) {
             throw new Error('Errore nella richiesta HTTP');
         }
+        if (localStorage.getItem("pokemonIndex") !== null) {
+            let string = localStorage.getItem("pokemonIndex");
+            pokemonOwnedIndex = string.split(",");
+            console.log(pokemonOwnedIndex)
+        } else {
+            localStorage.setItem("pokemonIndex", pokemonOwnedIndex)
+        }
 
+        candies = parseInt(localStorage.getItem("candies"));
+        pokeball = parseInt(localStorage.getItem("pokeball"));
         const myJson = await response.json();
 
         pokemon = Array.from(myJson.results);
 
+        document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
+        setInterval(candiesUpdater, 1000);
+
+        document.getElementById("pokeball").textContent = pokeball;
+        setInterval(pokeballUpdater, 10000);
+
+        pokemon.forEach((pokemon, idx) => {
+            localStorage.setItem(idx, JSON.stringify(pokemon));
+        });
+
+        if (localStorage.getItem("0") !== null) {
+            for (let i = 0; i < 1272; i++) {
+                console.log(localStorage.getItem(i));
+            }
+        } else {
+            localStorage.setItem("pokemon", pokemon)
+        }
+
+        await checkAlreadyOwnedPokemon()
         await displayPokemon();
+
     })
     .catch(error => {
         console.error(error);
     });
 
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+function checkAlreadyOwnedPokemon() {
+    // console.log(pokemonOwnedIndex)
+    for (let i = 0; i < pokemon.length; i++) {
+        for (let j = 0; j < pokemonOwnedIndex.length; j++) {
+
+            if (i === pokemonOwnedIndex[j]) {
+                myPokemon.push(pokeball[i]);
+                pokemon[i] = null;
+
+            }
+        }
+    }
 }
 
-function checkAlreadyOwnedPokemon() { // da implementare quando ci sarà il salvataggio
-    /*
-        CONTROLLARE QUANDO SI CARICANO I DATI SAVATI 
-        DI METTERE A NULL I POKEMON GIA IN MY POKEMON
-    */
-}
-
-const candiesUpdater = ()=> { // aggiornamento temporizzato di caramelle e pokeball
+export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
     candies += 1;
     document.getElementById("candies").textContent = candies;
+    localStorage.setItem("candies", candies);
 }
-const pokeballUpdater = ()=> {
+export const pokeballUpdater = () => {
     pokeball += 1;
     document.getElementById("pokeball").textContent = pokeball;
+    localStorage.setItem("pokeball", pokeball);
 }
