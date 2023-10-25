@@ -19,9 +19,21 @@ export const pokeballUpdater = () => {
     localStorage.setItem("pokeball", pokeball);
 }
 
+export const checkAlreadyOwnedPokemon = () => {
+    for (let i = 0; i < pokemons.length; i++) {
+        for (let j = 0; j < pokemonOwnedIndex.length; j++) {
+            if (i === pokemonOwnedIndex[j] && pokemonOwnedIndex[j] !== "") {
+                myPokemon.push(pokeball[i]);
+                pokemons[i] = null;
+            }
+        }
+    }
+}
 
-const displayPokemon = async () => {
+export const displayPokemon = async () => {
     /* DA IMPLEMENTARE*/
+
+    checkAlreadyOwnedPokemon()
     const div = document.getElementById("pokemon");
 
     while (div.firstChild) { // pullisce lo schermo per updatare i pokemon
@@ -44,9 +56,11 @@ const displayPokemon = async () => {
     // TODO implementare forEach
     for (let i = 0; i < 1010; i++) { // mostra i pokemon
         if (pokemons[i] === null) continue;
-
         for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
+
             if (pokemonChain[j].chain.species.name === pokemons[i].name) {
+
+
                 const pokemonDiv = document.createElement("div"); // card
                 const pokemonContent = document.createElement('div'); // contenuto card
 
@@ -68,6 +82,7 @@ const displayPokemon = async () => {
                 // recupera l'immagine
                 const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`);
                 if (imageResponse.status !== 200) {
+                    //console.log(i)
                     throw new Error('Errore nella richiesta HTTP');
                 }
 
@@ -114,13 +129,11 @@ const displayPokemon = async () => {
                     pokeball -= 1;
 
                     if (random >= 0.5) { // condizioni di cattura
-                        console.log("preso");
                         myPokemon.push(pokemons[i]);
                         pokemons[i] = null;
                         pokemonOwnedIndex.push(i);
                         displayPokemon();
                     } else {
-                        console.log("oh no è scappato");
                         document.getElementById("pokeball").textContent = pokeball;
                     }
 
@@ -150,16 +163,22 @@ const getAllPokemons = async () => {
     if (localStorage.getItem("pokemonIndex") !== null) {
         let string = localStorage.getItem("pokemonIndex");
         pokemonOwnedIndex = string.split(",");
-        console.log(pokemonOwnedIndex)
     } else {
         localStorage.setItem("pokemonIndex", pokemonOwnedIndex)
     }
-
-    candies = parseInt(localStorage.getItem("candies"));
-    pokeball = parseInt(localStorage.getItem("pokeball"));
     const myJson = await allPokemons.json();
 
     pokemons = Array.from(myJson.results);
+
+    if (localStorage.getItem("candies") == null || localStorage.getItem("pokeball") == null || localStorage.getItem("candies") == NaN || localStorage.getItem("pokeball") == NaN) {
+        candies = 100;
+        pokeball = 100;
+        localStorage.setItem("candies", candies);
+        localStorage.setItem("pokeball", pokeball);
+    } else {
+        candies = parseInt(localStorage.getItem("candies"));
+        pokeball = parseInt(localStorage.getItem("pokeball"));
+    }
 
     document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
     setInterval(candiesUpdater, 1000);
@@ -171,30 +190,54 @@ const getAllPokemons = async () => {
         localStorage.setItem(idx, JSON.stringify(pokemon));
     });
 
-    if (localStorage.getItem("0") !== null) {
-        /*for (let i = 0; i < 1272; i++) {
-            console.log(localStorage.getItem(i));
-        }*/
-    } else {
-        localStorage.setItem("pokemon", pokemons)
-    }
 
-    await checkAlreadyOwnedPokemon()
+
     await displayPokemon();
 }
 
-const checkAlreadyOwnedPokemon = () => {
-    // console.log(pokemonOwnedIndex)
-    for (let i = 0; i < pokemons.length; i++) {
-        for (let j = 0; j < pokemonOwnedIndex.length; j++) {
-
-            if (i === pokemonOwnedIndex[j]) {
-                myPokemon.push(pokeball[i]);
-                pokemons[i] = null;
-
-            }
-        }
+const initializeVariables = () => {
+    if (localStorage.getItem("pokemonIndex") !== null) {
+        let string = localStorage.getItem("pokemonIndex");
+        pokemonOwnedIndex = string.split(",");
+    } else {
+        localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
     }
+
+    if (localStorage.getItem("candies") === null || localStorage.getItem("pokeball") === null || localStorage.getItem("candies") === NaN || localStorage.getItem("pokeball") === NaN) {
+        candies = 100;
+        pokeball = 100;
+        localStorage.setItem("candies", candies);
+        localStorage.setItem("pokeball", pokeball);
+    } else {
+        candies = parseInt(localStorage.getItem("candies"));
+        pokeball = parseInt(localStorage.getItem("pokeball"));
+    }
+
+    if (localStorage.getItem("0") === null) {
+        getAllPokemons();
+    } else {
+        for (let i = 0; i < 1272; i++) {
+            pokemons.push(JSON.parse(localStorage.getItem(i.toString())));
+        }
+        document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
+        setInterval(candiesUpdater, 1000);
+
+        document.getElementById("pokeball").textContent = pokeball;
+        setInterval(pokeballUpdater, 10000);
+        //console.log(pokemons)
+        displayPokemon();
+    }
+
 }
 
-getAllPokemons();
+
+/*for (let i = 0; i < 1272; i++) {
+    localStorage.removeItem(i);
+}
+
+localStorage.removeItem("pokemonIndex")
+
+localStorage.removeItem("candies")
+localStorage.removeItem("pokeball")*/
+
+await initializeVariables()
