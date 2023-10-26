@@ -199,7 +199,7 @@ const getAllPokemons = async () => {
     setInterval(pokeballUpdater, 10000);
 
     pokemons.forEach((pokemon, idx) => {
-        localStorage.setItem(idx, JSON.stringify(pokemon));
+        localStorage.setItem(idx.toString(), JSON.stringify(pokemon));
     });
 
 
