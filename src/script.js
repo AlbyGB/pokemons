@@ -6,6 +6,7 @@ let myPokemon = [];
 let candies = 100;
 let pokeball = 100;
 let pokemonOwnedIndex = [];
+let evolvedPokemonIndex = [];
 
 
 export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
@@ -20,14 +21,20 @@ export const pokeballUpdater = () => {
 }
 
 export const checkAlreadyOwnedPokemon = () => {
-    for (let i = 0; i < pokemons.length; i++) {
-        for (let j = 0; j < pokemonOwnedIndex.length; j++) {
-            if (i === pokemonOwnedIndex[j] && pokemonOwnedIndex[j] !== "") {
-                myPokemon.push(pokeball[i]);
-                pokemons[i] = null;
-            }
+    for (let j = 0; j < pokemonOwnedIndex.length; j++) {
+        
+        if ( pokemonOwnedIndex[j] !== "") {
+            myPokemon.push(pokemons[pokemonOwnedIndex[j]]);
+            pokemons[pokemonOwnedIndex[j]] = null;
         }
     }
+    for (let j = 0; j < evolvedPokemonIndex.length; j++) {
+       
+        if ( evolvedPokemonIndex[j] !== "") {
+            pokemons[evolvedPokemonIndex[j] - 1] = null;
+        }
+    }
+    
 }
 
 export const displayPokemon = async () => {
@@ -129,11 +136,13 @@ export const displayPokemon = async () => {
                     pokeball -= 1;
 
                     if (random >= 0.5) { // condizioni di cattura
+                        alert("Pokemon catturato!");
                         myPokemon.push(pokemons[i]);
                         pokemons[i] = null;
                         pokemonOwnedIndex.push(i);
                         displayPokemon();
                     } else {
+                        alert("Il pokemon è scappato")
                         document.getElementById("pokeball").textContent = pokeball;
                     }
 
@@ -206,6 +215,13 @@ const initializeVariables = () => {
         localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
     }
 
+    if (localStorage.getItem("evolvedIndex") !== null) {
+        let string = localStorage.getItem("evolvedIndex");
+        evolvedPokemonIndex = string.split(",");
+    } else {
+        localStorage.setItem("evolvedIndex", evolvedPokemonIndex)
+    }
+
     if (localStorage.getItem("candies") === null ||
         localStorage.getItem("pokeball") === null ||
         isNaN(localStorage.getItem("candies")) ||
@@ -231,6 +247,7 @@ const initializeVariables = () => {
 
         document.getElementById("pokeball").textContent = pokeball;
         setInterval(pokeballUpdater, 10000);
+        checkAlreadyOwnedPokemon();
         //console.log(pokemons)
         displayPokemon();
     }

@@ -7,6 +7,7 @@ let candies = 100;
 let pokeball = 100;
 let pokemonOwnedIndex = [];
 let listOfEvolutioins = [];
+let evolvedPokemonIndex = [];
 
 class evolutionElement {
     constructor(base, fase1, fase2) {
@@ -34,6 +35,13 @@ function initializeVariables() {
         pokemonOwnedIndex = string.split(",");
     } else {
         localStorage.setItem("pokemonIndex", pokemonOwnedIndex)
+    }
+
+    if (localStorage.getItem("evolvedIndex") !== null) {
+        let string = localStorage.getItem("evolvedIndex");
+        evolvedPokemonIndex = string.split(",");
+    } else {
+        localStorage.setItem("evolvedIndex", evolvedPokemonIndex)
     }
 
     if (localStorage.getItem("candies") == null || localStorage.getItem("pokeball") == null || localStorage.getItem("candies") == NaN || localStorage.getItem("pokeball") == NaN) {
@@ -87,9 +95,8 @@ const displayPokemon = async () => {
 
 
     // TODO implementare forEach
-    console.log(myPokemon)
+
     for (let i = 0; i < myPokemon.length; i++) { // mostra i pokemon
-        console.log(myPokemon[i])
         const pokemonDiv = document.createElement("div"); // card
         const pokemonContent = document.createElement('div'); // contenuto card
 
@@ -109,7 +116,6 @@ const displayPokemon = async () => {
         pokemonCardFront.appendChild(pokemonName);
 
         // recupera l'immagine
-    
         const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${indexImg}.png`);
         if (imageResponse.status !== 200) {
             //console.log(i)
@@ -157,11 +163,50 @@ const displayPokemon = async () => {
 
         /* todo IMPLEMENTARE IL BOTTONE PER FARE EVOLVERE */
         evolveButton.addEventListener("click", function () { //funzione al catch
-            pokemonChain.forEach((pokemon) => {
-                if(pokemon.chain.species.name == myPokemon[i].name){
-                    console.log(pokemon)
+
+            const index = Number.parseInt(myPokemon[i].url.split("/")[6]);
+            for (let j = 0; j < listOfEvolutioins.length; j++) {
+                let element = listOfEvolutioins[j];
+
+                if (index == element.base && element.fase1 == null) {
+                    console.log("Il pokemon non si può evolvere")
+                    j = listOfEvolutioins.length;
                 }
-            })
+
+                if (index == element.base && element.fase1 != null) {
+                    if ((candies - 100) >= 0) {
+                        pokemonOwnedIndex[i + 1] = element.fase1 - 1;
+                        evolvedPokemonIndex.push(index);
+                        localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
+                        candies -= 100;
+                        checkOwnedPokemon();
+                        displayPokemon();
+                    } else {
+                        alert("Non hai abbastanza caramelle");
+                    }
+
+                    j = listOfEvolutioins.length;
+                } else if (index == element.fase1 && element.fase2 != null) {
+                    if ((candies - 200) >= 0){
+                        pokemonOwnedIndex[i + 1] = element.fase2 - 1;
+                        localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
+                        evolvedPokemonIndex.push(index);
+                        localStorage.setItem("evolvedIndex", evolvedPokemonIndex);
+                        candies -= 200;
+                        checkOwnedPokemon();
+                        displayPokemon();
+                    } else {
+                        alert("Non hai abbastanza caramelle");
+                    }
+                   
+                    j = listOfEvolutioins.length;
+                } else if (index == element.fase2) {
+                    j = listOfEvolutioins.length;
+                }
+
+            }
+
+
         });
 
         pokemonCardBack.appendChild(evolveButton);
@@ -215,32 +260,34 @@ const getAllPokemons = async () => {
 }
 
 function checkOwnedPokemon() {
+    myPokemon = [];
     pokemonOwnedIndex.forEach((idx) => {
-        if(idx != ""){
+        if (idx != "") {
             myPokemon.push(pokemons[idx]);
         }
-        
+
     })
 }
 
-function createListEvolutioins(){
+function createListEvolutioins() {
     pokemonChain.forEach(pokemon => {
-        if(pokemon.chain.evolves_to[0] != null && pokemon.chain.evolves_to[0].evolves_to[0] != null){
-            
+        if (pokemon.chain.evolves_to[0] != null && pokemon.chain.evolves_to[0].evolves_to[0] != null) {
+            const index0 = Number.parseInt(pokemon.chain.species.url.split("/")[6]);
             const index1 = Number.parseInt(pokemon.chain.evolves_to[0].species.url.split("/")[6]);
             const index2 = Number.parseInt(pokemon.chain.evolves_to[0].evolves_to[0].species.url.split("/")[6]);
-            const element = new evolutionElement(pokemon.id, index1, index2)
+            const element = new evolutionElement(index0, index1, index2)
             listOfEvolutioins.push(element);
-        } else if (pokemon.chain.evolves_to[0] != null && pokemon.chain.evolves_to[0].evolves_to[0] == null){
+        } else if (pokemon.chain.evolves_to[0] != null && pokemon.chain.evolves_to[0].evolves_to[0] == null) {
+            const index0 = Number.parseInt(pokemon.chain.species.url.split("/")[6]);
             const index1 = Number.parseInt(pokemon.chain.evolves_to[0].species.url.split("/")[6]);
-            const element = new evolutionElement(pokemon.id, index1, null)
+            const element = new evolutionElement(index0, index1, null)
             listOfEvolutioins.push(element);
         } else {
-            const element = new evolutionElement(pokemon.id, null, null)
+            const index0 = Number.parseInt(pokemon.chain.species.url.split("/")[6]);
+            const element = new evolutionElement(index0, null, null)
             listOfEvolutioins.push(element);
         }
     })
-    console.log(listOfEvolutioins)
 }
 
 /*for (let i = 0; i < 1272; i++) {
@@ -250,5 +297,8 @@ function createListEvolutioins(){
 localStorage.removeItem("pokemonIndex")
 
 localStorage.removeItem("candies")
-localStorage.removeItem("pokeball")*/
-initializeVariables()
+localStorage.removeItem("pokeball")
+localStorage.removeItem("evolvedIndex")*/
+
+
+initializeVariables();
