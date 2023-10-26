@@ -16,8 +16,6 @@ class evolutionElement {
     }
 }
 
-
-
 export const candiesUpdater = () => { // aggiornamento temporizzato di caramelle e pokeball
     candies += 1;
     document.getElementById("candies").textContent = candies;
