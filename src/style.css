@@ -118,9 +118,19 @@ body{
 }
 
 .elementNav{
-    color: rgb(10, 74, 127);;
+    color: rgb(10, 74, 127);
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
+}
+
+.evolveButton{
+    width: 80px;
+    height: 25px;
+    background-color: rgb(240, 255, 144);
+    border: none;
+    border-radius: 40%;
+    color: rgb(10, 74, 127);
+    font-size: large;
 }
