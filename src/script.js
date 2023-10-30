@@ -22,19 +22,19 @@ export const pokeballUpdater = () => {
 
 export const checkAlreadyOwnedPokemon = () => {
     for (let j = 0; j < pokemonOwnedIndex.length; j++) {
-        
-        if ( pokemonOwnedIndex[j] !== "") {
+
+        if (pokemonOwnedIndex[j] !== "") {
             myPokemon.push(pokemons[pokemonOwnedIndex[j]]);
             pokemons[pokemonOwnedIndex[j]] = null;
         }
     }
     for (let j = 0; j < evolvedPokemonIndex.length; j++) {
-       
-        if ( evolvedPokemonIndex[j] !== "") {
+
+        if (evolvedPokemonIndex[j] !== "") {
             pokemons[evolvedPokemonIndex[j] - 1] = null;
         }
     }
-    
+
 }
 
 export const displayPokemon = async () => {
@@ -51,7 +51,6 @@ export const displayPokemon = async () => {
         if (i !== 209 && i !== 221 && i !== 224 && i !== 226 && i !== 230 && i !== 237 && i !== 250 && i !== 225) {
             const data = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${i + 1}/`);
             const pokeJson = await data.json();
-            // console.log(pokeJson)
             // console.log(i)
             if (data.status === 200) {
                 pokemonChain.push(pokeJson);
@@ -59,104 +58,103 @@ export const displayPokemon = async () => {
         }
     }
 
+    for (let k = 0; k < pokemonChain.length; k++) {
+        const index = Number.parseInt(pokemonChain[k].chain.species.url.split("/")[6]);
+        if (pokemons[index - 1] != null) {
+            let j = index - 1;
+            const pokemonDiv = document.createElement("div"); // card
+            const pokemonContent = document.createElement('div'); // contenuto card
 
-    // TODO implementare forEach
-    for (let i = 0; i < 1010; i++) { // mostra i pokemon
-        if (pokemons[i] === null) continue;
-        for (let j = 0; j < pokemonChain.length; j++) { // controlla che il pokemon appartenga a quelli base
+            pokemonDiv.className = "pokemonContainer";
+            pokemonContent.className = "card-inner";
 
-            if (pokemonChain[j].chain.species.name === pokemons[i].name) {
+            const pokemonCardFront = document.createElement("div"); // front
+            const pokemonCardBack = document.createElement("div"); // back
 
+            pokemonCardFront.className = "front";
+            pokemonCardBack.className = "back";
 
-                const pokemonDiv = document.createElement("div"); // card
-                const pokemonContent = document.createElement('div'); // contenuto card
+            let pokemonName = document.createElement("h5"); // nome pokemon
 
-                pokemonDiv.className = "pokemonContainer";
-                pokemonContent.className = "card-inner";
+            pokemonName.className = "pokemonName";
+            pokemonName.textContent = pokemons[j].name + "  #" + (j + 1);
+            pokemonCardFront.appendChild(pokemonName);
 
-                const pokemonCardFront = document.createElement("div"); // front
-                const pokemonCardBack = document.createElement("div"); // back
-
-                pokemonCardFront.className = "front";
-                pokemonCardBack.className = "back";
-
-                let pokemonName = document.createElement("h5"); // nome pokemon
-
-                pokemonName.className = "pokemonName";
-                pokemonName.textContent = pokemons[i].name + "  #" + (i + 1);
-                pokemonCardFront.appendChild(pokemonName);
-
-                // recupera l'immagine
-                const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`);
-                if (imageResponse.status !== 200) {
-                    //console.log(i)
-                    throw new Error('Errore nella richiesta HTTP');
-                }
-
-                const bleb = await imageResponse.blob();
-
-                const image = document.createElement("img"); // immagine
-                image.className = "pokemonImage";
-                image.src = URL.createObjectURL(bleb);
-                pokemonCardFront.appendChild(image);
-
-                const imgPokemon = document.createElement("img"); // logo pokemon sul retro della card
-                imgPokemon.src = "https://assets.pokemon.com/assets/cms2-it-it/img/misc/gus/buttons/logo-pokemon-79x45.png";
-                pokemonCardBack.appendChild(imgPokemon);
-
-                // recupero informazioni aggiuntive per il pokemon
-                const pokemonInformationsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}/`);
-
-                if (pokemonInformationsResponse.status !== 200) {
-                    throw new Error('Errore nella richiesta API');
-                }
-
-                const pokemonInformationJSON = await pokemonInformationsResponse.json();
-
-                const abilityContainer = document.createElement("div"); // div abilità pokemon
-                abilityContainer.className = "abilityContainer";
-
-                abilityContainer.appendChild(document.createElement("hr"));
-
-                pokemonInformationJSON.abilities.forEach(element => {
-                    const pokemonBackcardText = document.createElement("h3");
-                    pokemonBackcardText.textContent = element.ability.name;
-                    abilityContainer.appendChild(pokemonBackcardText);
-                });
-
-                abilityContainer.appendChild(document.createElement("hr"));
-                pokemonCardBack.appendChild(abilityContainer);
-
-                const catchButton = document.createElement("button"); // bottone catch
-                catchButton.className = "catchButton";
-                catchButton.innerHTML = "Catch";
-
-                catchButton.addEventListener("click", function () { //funzione al catch
-                    const random = Math.random();
-                    pokeball -= 1;
-
-                    if (random >= 0.5) { // condizioni di cattura
-                        alert("Pokemon catturato!");
-                        myPokemon.push(pokemons[i]);
-                        pokemons[i] = null;
-                        pokemonOwnedIndex.push(i);
-                        displayPokemon();
-                    } else {
-                        alert("Il pokemon è scappato")
-                        document.getElementById("pokeball").textContent = pokeball;
-                    }
-
-                    localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
-                });
-
-                pokemonCardBack.appendChild(catchButton);
-                pokemonContent.appendChild(pokemonCardFront);
-                pokemonContent.appendChild(pokemonCardBack);
-                pokemonDiv.appendChild(pokemonContent);
-
-                div.appendChild(pokemonDiv);
-                j = pokemonChain.length; // stoppa il for
+            // recupera l'immagine
+            const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${j + 1}.png`);
+            if (imageResponse.status !== 200) {
+                //console.log(i)
+                throw new Error('Errore nella richiesta HTTP');
             }
+
+            const bleb = await imageResponse.blob();
+
+            const image = document.createElement("img"); // immagine
+            image.className = "pokemonImage";
+            image.src = URL.createObjectURL(bleb);
+            pokemonCardFront.appendChild(image);
+
+            const imgPokemon = document.createElement("img"); // logo pokemon sul retro della card
+            imgPokemon.src = "https://assets.pokemon.com/assets/cms2-it-it/img/misc/gus/buttons/logo-pokemon-79x45.png";
+            pokemonCardBack.appendChild(imgPokemon);
+
+            // recupero informazioni aggiuntive per il pokemon
+            const pokemonInformationsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${j + 1}/`);
+
+            if (pokemonInformationsResponse.status !== 200) {
+                throw new Error('Errore nella richiesta API');
+            }
+
+            const pokemonInformationJSON = await pokemonInformationsResponse.json();
+
+            const abilityContainer = document.createElement("div"); // div abilità pokemon
+            abilityContainer.className = "abilityContainer";
+
+            abilityContainer.appendChild(document.createElement("hr"));
+
+            pokemonInformationJSON.abilities.forEach(element => {
+                const pokemonBackcardText = document.createElement("h3");
+                pokemonBackcardText.textContent = element.ability.name;
+                abilityContainer.appendChild(pokemonBackcardText);
+            });
+
+            abilityContainer.appendChild(document.createElement("hr"));
+            pokemonCardBack.appendChild(abilityContainer);
+
+            const catchButton = document.createElement("button"); // bottone catch
+            catchButton.className = "catchButton";
+            catchButton.innerHTML = "Catch";
+
+            catchButton.addEventListener("click", function () { //funzione al catch
+
+
+
+                console.log(pokemonInformationJSON)
+
+
+                const random = Math.random();
+                pokeball -= 1;
+
+                if (random >= 0.5) { // condizioni di cattura
+                    alert("Pokemon catturato!");
+                    myPokemon.push(pokemons[j]);
+                    pokemons[j] = null;
+                    pokemonOwnedIndex.push(j);
+                    displayPokemon();
+                } else {
+                    alert("Il pokemon è scappato")
+                    document.getElementById("pokeball").textContent = pokeball;
+                }
+
+                localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
+            });
+
+            pokemonCardBack.appendChild(catchButton);
+            pokemonContent.appendChild(pokemonCardFront);
+            pokemonContent.appendChild(pokemonCardBack);
+            pokemonDiv.appendChild(pokemonContent);
+
+            div.appendChild(pokemonDiv);
         }
     }
 }

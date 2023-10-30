@@ -58,7 +58,6 @@ function initializeVariables() {
         getAllPokemons();
     } else {
         for (let i = 0; i < 1272; i++) {
-            console.log(i)
             pokemons.push(JSON.parse(localStorage.getItem(i)));
         }
         document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
@@ -161,7 +160,6 @@ const displayPokemon = async () => {
         evolveButton.className = "evolveButton";
         evolveButton.innerHTML = "Evolve";
 
-
         /* todo IMPLEMENTARE IL BOTTONE PER FARE EVOLVERE */
         evolveButton.addEventListener("click", function () { //funzione al catch
 
@@ -193,6 +191,7 @@ const displayPokemon = async () => {
                         pokemonOwnedIndex[i + 1] = element.fase2 - 1;
                         localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
                         evolvedPokemonIndex.push(index);
+                        
                         localStorage.setItem("evolvedIndex", evolvedPokemonIndex);
                         candies -= 200;
                         checkOwnedPokemon();
