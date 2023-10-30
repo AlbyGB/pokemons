@@ -46,7 +46,7 @@ body{
     height: 100%;
     text-align: center;
     transform-style: preserve-3d;
-    transition: transform 0.5s;
+    transition: transform 2s;
     perspective: 1000px;
 }
 
@@ -60,7 +60,7 @@ body{
     border-radius: 10%;
     transform: rotateY(180deg); /* Ruota il background quando l'elemento è ruotato */
     transform-origin: center; /* Centra la trasformazione di origine */
-    transition: transform 0.5s; /* Applicare la stessa transizione al background */
+    transition: transform 2s; /* Applicare la stessa transizione al background */
 }
 
 
@@ -70,7 +70,7 @@ body{
     height: 250px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.5s;
+    transition: transform 2s;
     transform: rotateY(0deg);
 }
 

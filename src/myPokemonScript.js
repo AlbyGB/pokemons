@@ -58,6 +58,7 @@ function initializeVariables() {
         getAllPokemons();
     } else {
         for (let i = 0; i < 1272; i++) {
+            console.log(i)
             pokemons.push(JSON.parse(localStorage.getItem(i)));
         }
         document.getElementById("candies").textContent = candies; //inizializza il testo di caramelle e pokemon
@@ -170,6 +171,7 @@ const displayPokemon = async () => {
 
                 if (index == element.base && element.fase1 == null) {
                     console.log("Il pokemon non si può evolvere")
+                    alert("Il pokemon non si può evolvere");
                     j = listOfEvolutioins.length;
                 }
 
@@ -201,6 +203,10 @@ const displayPokemon = async () => {
                    
                     j = listOfEvolutioins.length;
                 } else if (index == element.fase2) {
+                    alert("Il pokemon non si può evolvere");
+                    j = listOfEvolutioins.length;
+                } else if (index == element.fase1 && element.fase2 == null){
+                    alert("Il pokemon non si può evolvere");
                     j = listOfEvolutioins.length;
                 }
 
