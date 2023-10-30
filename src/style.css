@@ -21,13 +21,17 @@ body{
 
 .pokemonName{
     color: rgb(240, 255, 144);
-    font-size: 20px;
+    /*font-size: 20px;*/
     text-transform: capitalize;
+    display: flex;
+    flex-direction: column; /* direzione standard, può essere cambiata in 'column' per un layout verticale */
+    justify-content: space-between; /* distribuisce lo spazio uniformemente tra gli elementi */
+    align-items: center;
 }
 
 .pokemonImage{
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
 }
 
 .pokeNav {
@@ -132,5 +136,149 @@ body{
     border: none;
     border-radius: 40%;
     color: rgb(10, 74, 127);
+    font-size: large;
+}
+
+.normal{
+    background-color: gray;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.fire{
+    background-color: red;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.water{
+    background-color: rgb(101, 146, 214);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.electric{
+    background-color: rgb(127, 127, 0);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.grass{
+    background-color: rgb(0, 140, 7);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.ice{
+    background-color: rgb(129, 219, 255);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.fighting{
+    background-color: rgb(104, 28, 28);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.poison{
+    background-color: purple;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.ground{
+    background-color: burlywood;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.flying{
+    background-color: rgb(88, 119, 255);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.psychic{
+    background-color: palevioletred;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.bug{
+    background-color: rgb(53, 110, 9);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.rock{
+    background-color: rgb(113, 107, 107);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.ghost{
+    background-color: darkblue;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.dragon{
+    background-color: rgb(61, 61, 157);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.dark{
+    background-color: black;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.steel{
+    background-color: rgb(154, 154, 154);
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+}
+.fairy{
+    background-color: pink;
+    color: white;
+    border-radius: 10%;
+    padding: 3px;
+    font-size: 10px;
+
+}
+
+.divTypes{
+    display: flex;
+    flex-direction: row; /* direzione standard, può essere cambiata in 'column' per un layout verticale */
+    justify-content: space-between; /* distribuisce lo spazio uniformemente tra gli elementi */
+    align-items: center; /* centra gli elementi lungo l'asse trasversale */
+    gap: 5px;
+}
+
+.sortButton{
+    background-color: rgb(10, 74, 127);
+    border: none;
+    border-radius: 10%;
+    color: rgb(240, 255, 144);
     font-size: large;
 }

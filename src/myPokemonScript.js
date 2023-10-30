@@ -109,32 +109,20 @@ const displayPokemon = async () => {
         pokemonCardFront.className = "front";
         pokemonCardBack.className = "back";
 
-        let pokemonName = document.createElement("h5"); // nome pokemon
+        let pokemonName = document.createElement("div"); // nome pokemon
+        let p = document.createElement("h3");
         let indexImg = Number.parseInt(pokemonOwnedIndex[i + 1]) + 1
         pokemonName.className = "pokemonName";
-        pokemonName.textContent = myPokemon[i].name + "  #" + (indexImg);
+        p.textContent = myPokemon[i].name + "  #" + (indexImg);
+        pokemonName.appendChild(p);
         pokemonCardFront.appendChild(pokemonName);
-
-        // recupera l'immagine
-        const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${indexImg}.png`);
-        if (imageResponse.status !== 200) {
-            //console.log(i)
-            throw new Error('Errore nella richiesta HTTP');
-        }
-
-        const bleb = await imageResponse.blob();
-
-        const image = document.createElement("img"); // immagine
-        image.className = "pokemonImage";
-        image.src = URL.createObjectURL(bleb);
-        pokemonCardFront.appendChild(image);
 
         const imgPokemon = document.createElement("img"); // logo pokemon sul retro della card
         imgPokemon.src = "https://assets.pokemon.com/assets/cms2-it-it/img/misc/gus/buttons/logo-pokemon-79x45.png";
         pokemonCardBack.appendChild(imgPokemon);
 
         // recupero informazioni aggiuntive per il pokemon
-        const pokemonInformationsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}/`);
+        const pokemonInformationsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${Number.parseInt(pokemonOwnedIndex[i + 1]) + 1}/`);
 
         if (pokemonInformationsResponse.status !== 200) {
             throw new Error('Errore nella richiesta API');
@@ -144,8 +132,24 @@ const displayPokemon = async () => {
 
         const abilityContainer = document.createElement("div"); // div abilità pokemon
         abilityContainer.className = "abilityContainer";
-
+        console.log(pokemonInformationJSON);
         abilityContainer.appendChild(document.createElement("hr"));
+        const divTypes = document.createElement("div");
+        divTypes.className = "divTypes";
+        pokemonInformationJSON.types.forEach((type) => {
+            console.log(type.type.name);
+            const typeText = document.createElement("p")
+            typeText.className = type.type.name;
+            typeText.innerHTML = type.type.name;
+            divTypes.appendChild(typeText);
+        })
+        pokemonName.append(divTypes);
+        const image = document.createElement("img"); // immagine
+        image.className = "pokemonImage";
+        
+        image.src = `https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${indexImg}.png`
+        pokemonCardFront.appendChild(image);
+
 
         pokemonInformationJSON.abilities.forEach(element => {
             const pokemonBackcardText = document.createElement("h3");
@@ -294,6 +298,8 @@ function createListEvolutioins() {
         }
     })
 }
+
+/*  TODO implementare l'eliminazione dei pokemon*/
 
 /*for (let i = 0; i < 1272; i++) {
     localStorage.removeItem(i);

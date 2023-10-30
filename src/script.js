@@ -74,24 +74,26 @@ export const displayPokemon = async () => {
             pokemonCardFront.className = "front";
             pokemonCardBack.className = "back";
 
-            let pokemonName = document.createElement("h5"); // nome pokemon
-
+            let pokemonName = document.createElement("div"); // nome pokemon
+            let p = document.createElement("h3");
             pokemonName.className = "pokemonName";
-            pokemonName.textContent = pokemons[j].name + "  #" + (j + 1);
+            p.textContent = pokemons[j].name + "  #" + (j + 1);
+            pokemonName.appendChild(p);
             pokemonCardFront.appendChild(pokemonName);
 
             // recupera l'immagine
-            const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${j + 1}.png`);
+            /*const imageResponse = await fetch(`https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${j + 1}.png`);
             if (imageResponse.status !== 200) {
                 //console.log(i)
                 throw new Error('Errore nella richiesta HTTP');
             }
 
             const bleb = await imageResponse.blob();
+            image.src = URL.createObjectURL(bleb);*/
 
             const image = document.createElement("img"); // immagine
             image.className = "pokemonImage";
-            image.src = URL.createObjectURL(bleb);
+            image.src = `https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/${j + 1}.png`
             pokemonCardFront.appendChild(image);
 
             const imgPokemon = document.createElement("img"); // logo pokemon sul retro della card
@@ -106,6 +108,16 @@ export const displayPokemon = async () => {
             }
 
             const pokemonInformationJSON = await pokemonInformationsResponse.json();
+
+            const divTypes = document.createElement("div");
+            divTypes.className = "divTypes";
+            pokemonInformationJSON.types.forEach((type) => {
+                const typeText = document.createElement("p")
+                typeText.className = type.type.name;
+                typeText.innerHTML = type.type.name;
+                divTypes.appendChild(typeText);
+            })
+            pokemonName.appendChild(divTypes);
 
             const abilityContainer = document.createElement("div"); // div abilità pokemon
             abilityContainer.className = "abilityContainer";
@@ -261,5 +273,17 @@ localStorage.removeItem("pokemonIndex")
 
 localStorage.removeItem("candies")
 localStorage.removeItem("pokeball")*/
+
+
+/*  TODO implementare il filtro solo per il tipo del pokemon
+
+const normalButton = document.createElement("button")
+normalButton.innerHTML = "NormalPokemon";
+normalButton.className = "sortButton"
+normalButton.addEventListener("click", () => {
+    console.log("funziona");
+})
+
+document.getElementById("filterNav").appendChild(normalButton);*/
 
 await initializeVariables()
