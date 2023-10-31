@@ -140,7 +140,7 @@ body{
 }
 
 .normal{
-    background-color: gray;
+    background-color: rgb(128, 128, 128);
     color: white;
     border-radius: 10%;
     padding: 3px;
@@ -258,7 +258,7 @@ body{
     padding: 3px;
     font-size: 10px;
 }
-.fairy{
+.fairy {
     background-color: pink;
     color: white;
     border-radius: 10%;
@@ -277,9 +277,26 @@ body{
 
 .sortButton{
     background-color: rgb(10, 74, 127);
-    border: none;
-    border-radius: 10%;
+    padding: 14px 20px; /* Padding intorno al testo */
+    margin: 8px 10px; /* Margine superiore e inferiore */
+    border: none; /* Nessun bordo */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+    width: 25%; /* Larghezza del bottone */
+    border-radius: 4px; /* Angoli arrotondati */
+    transition: 0.3s; /* Effetto di transizione */
     color: rgb(240, 255, 144);
-    font-size: large;
-    gap: 20px;
+}
+
+.sortButton:hover {
+    background-color: #45a049; /* Cambia colore al passaggio del mouse */
+}
+
+input {
+    width: 25%; /* Larghezza al 100% del contenitore */
+    padding: 12px 20px; /* Padding intorno al testo */
+    margin: 8px 10px; /* Margine superiore e inferiore */
+    display: inline-block; /* Per farlo stare in linea con altri elementi */
+    border: 1px solid #ccc; /* Bordo sottile e grigio */
+    border-radius: 4px; /* Angoli arrotondati */
+    box-sizing: border-box; /* Include padding e border nella dimensione totale dell'elemento */
 }

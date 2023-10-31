@@ -44,7 +44,11 @@ function initializeVariables() {
         localStorage.setItem("evolvedIndex", evolvedPokemonIndex)
     }
 
-    if (localStorage.getItem("candies") == null || localStorage.getItem("pokeball") == null || localStorage.getItem("candies") == NaN || localStorage.getItem("pokeball") == NaN) {
+    if (localStorage.getItem("candies") == null ||
+        localStorage.getItem("pokeball") == null ||
+        isNaN(localStorage.getItem("candies")) ||
+        isNaN(localStorage.getItem("pokeball"))
+    ) {
         candies = 100;
         pokeball = 100;
         localStorage.setItem("candies", candies);
