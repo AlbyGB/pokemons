@@ -17,6 +17,7 @@
 body{
     background-color: rgb(8, 9, 26);
     margin: 0;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .pokemonName{
@@ -293,6 +294,8 @@ body{
 
 input {
     width: 25%; /* Larghezza al 100% del contenitore */
+    background-color: rgb(218, 209, 91);
+    color: rgb(10, 74, 127);
     padding: 12px 20px; /* Padding intorno al testo */
     margin: 8px 10px; /* Margine superiore e inferiore */
     display: inline-block; /* Per farlo stare in linea con altri elementi */
