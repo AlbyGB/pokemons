@@ -16,7 +16,7 @@
 
 body{
     background-color: rgb(8, 9, 26);
-    /*background-color: rgb(20, 167, 27);*/
+    margin: 0;
 }
 
 .pokemonName{
@@ -281,4 +281,5 @@ body{
     border-radius: 10%;
     color: rgb(240, 255, 144);
     font-size: large;
+    gap: 20px;
 }

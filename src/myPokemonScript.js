@@ -95,8 +95,8 @@ const displayPokemon = async () => {
 
 
     // TODO implementare forEach
-
     for (let i = 0; i < myPokemon.length; i++) { // mostra i pokemon
+       
         const pokemonDiv = document.createElement("div"); // card
         const pokemonContent = document.createElement('div'); // contenuto card
 
@@ -310,6 +310,5 @@ localStorage.removeItem("pokemonIndex")
 localStorage.removeItem("candies")
 localStorage.removeItem("pokeball")
 localStorage.removeItem("evolvedIndex")*/
-
 
 initializeVariables();
