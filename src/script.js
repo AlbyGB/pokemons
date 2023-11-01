@@ -170,7 +170,8 @@ export const displayPokemon = async (filterValue, filterType) => {
                 if (typeName == filterValue) {
                     valid = true;
                 }
-            })
+            });
+
             if (pokemons[index - 1] != null && valid) {
                 let j = index - 1;
                 const pokemonDiv = document.createElement("div"); // card
