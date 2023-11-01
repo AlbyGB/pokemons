@@ -164,13 +164,12 @@ export const displayPokemon = async (filterValue, filterType) => {
             }
             const pokemonInformationJSON = await pokemonInformationsResponse.json();
 
-
             pokemonInformationJSON.types.forEach((type) => {
                 let typeName = type.type.name
                 if (typeName == filterValue) {
                     valid = true;
                 }
-            })
+            });
             if (pokemons[index - 1] != null && valid) {
                 let j = index - 1;
                 const pokemonDiv = document.createElement("div"); // card
