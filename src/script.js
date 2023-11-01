@@ -448,7 +448,7 @@ const initializeVariables = () => {
 }
 
 const nameSearchButton = document.createElement("button");
-nameSearchButton.innerHTML = "Search for name";
+nameSearchButton.innerHTML = "Search by name";
 nameSearchButton.className = "sortButton";
 nameSearchButton.addEventListener("click", () => {
     displayPokemon(document.getElementById("inputString").value, "name");
@@ -457,7 +457,7 @@ document.getElementById("filterNav").appendChild(nameSearchButton);
 
 
 const typeSearchButton = document.createElement("button");
-typeSearchButton.innerHTML = "Search for type";
+typeSearchButton.innerHTML = "Search by type";
 typeSearchButton.className = "sortButton";
 typeSearchButton.addEventListener("click", () => {
     displayPokemon(document.getElementById("inputString").value, "type");
