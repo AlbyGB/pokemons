@@ -187,6 +187,7 @@ const displayPokemon = async () => {
                         evolvedPokemonIndex.push(index);
                         localStorage.setItem("pokemonIndex", pokemonOwnedIndex);
                         candies -= 100;
+                        localStorage.setItem("evolvedIndex", evolvedPokemonIndex);
                         checkOwnedPokemon();
                         displayPokemon();
                     } else {
